@@ -1,7 +1,6 @@
 <?php
 require '../vendor/autoload.php';
 
-use Carbon\Carbon;
 use Intervention\Image\AbstractFont;
 use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,13 +8,13 @@ use Symfony\Component\HttpFoundation\Request;
 $request = Request::createFromGlobals();
 
 // basic settings
-$timezone = $request->get('tz', 'Europe/Berlin');
-$now = Carbon::parse('now', $timezone);
-$target = Carbon::parse($request->get('t', 'now'), $timezone);
-$diff = $now->diffInSeconds($target, false);
+$timezone = timezone_open((string) $request->get('tz', 'Europe/Berlin'));
+$now = new DateTime('now', $timezone);
+$target = new DateTime($request->get('t', 'now'), $timezone);
+$diff = $target->getTimestamp() - $now->getTimestamp();
 $seconds = max(0, min(60, $request->get('s', 10)));
 $default = $request->get('d');
-$format = $request->get('f', 'd:h:m:s');
+$format = $request->get('f', '{d}:{h}:{m}:{s}');
 
 // image settings
 $width = intval($request->get('w', 500));
@@ -23,7 +22,7 @@ $height = intval($request->get('h', 50));
 $background = $request->get('bg', '#ffffff');
 
 // font settings
-$fontType = $request->get('ft', 'lato');
+$fontType = $request->get('ft');
 $fontSize = intval($request->get('fs', 48));
 $fontColor = $request->get('fc', '#ff0000');
 switch ($fontType) {
@@ -49,10 +48,10 @@ function secondsToUnits($seconds)
     $seconds -= $minutes * 60;
 
     return [
-        'd' => str_pad($days, 2, '0', STR_PAD_LEFT),
-        'h' => str_pad($hours, 2, '0', STR_PAD_LEFT),
-        'm' => str_pad($minutes, 2, '0', STR_PAD_LEFT),
-        's' => str_pad($seconds, 2, '0', STR_PAD_LEFT),
+        '{d}' => str_pad($days, 2, '0', STR_PAD_LEFT),
+        '{h}' => str_pad($hours, 2, '0', STR_PAD_LEFT),
+        '{m}' => str_pad($minutes, 2, '0', STR_PAD_LEFT),
+        '{s}' => str_pad($seconds, 2, '0', STR_PAD_LEFT),
     ];
 }
 
