@@ -1,14 +1,14 @@
 <?php
 require '../vendor/autoload.php';
 
+use Carbon\Carbon;
+use Intervention\Image\AbstractFont;
 use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\Request;
-use Intervention\Image\AbstractFont;
-use Carbon\Carbon;
 
 $request = Request::createFromGlobals();
 
-// basic setting
+// basic settings
 $timezone = $request->get('tz', 'Europe/Berlin');
 $now = Carbon::parse('now', $timezone);
 $target = Carbon::parse($request->get('t', 'now'), $timezone);
@@ -39,7 +39,8 @@ switch ($fontType) {
  * do not touch this
  * image generation by url parameters
  */
-function secondsToUnits($seconds) {
+function secondsToUnits($seconds)
+{
     $days = floor($seconds / (24 * 60 * 60));
     $seconds -= $days * (24 * 60 * 60);
     $hours = floor($seconds / (60 * 60));
@@ -62,7 +63,7 @@ $gif = new Imagick();
 $gif->setFormat('gif');
 for ($i = 0; $i <= $seconds; $i++) {
     $text = $default;
-    if($diff >= 0) {
+    if ($diff >= 0) {
         $units = secondsToUnits($diff - $i);
         $text = str_replace(array_keys($units), array_values($units), $format);
     }
