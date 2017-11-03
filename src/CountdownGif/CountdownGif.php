@@ -4,10 +4,10 @@ namespace Astrotomic\CountdownGif;
 
 use Astrotomic\CountdownGif\Helper\Font;
 use Astrotomic\CountdownGif\Helper\Formatter;
+use Cache\Adapter\Common\CacheItem;
 use DateTime;
 use Imagick;
 use ImagickDraw;
-use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 class CountdownGif
@@ -58,11 +58,6 @@ class CountdownGif
     protected $identifier;
 
     /**
-     * @var string
-     */
-    protected $cacheItemClass;
-
-    /**
      * CountdownGif constructor.
      * @param DateTime $now
      * @param DateTime $target
@@ -72,9 +67,8 @@ class CountdownGif
      * @param Font $font
      * @param string $default
      * @param CacheItemPoolInterface $cache
-     * @param string $cacheItemClass
      */
-    public function __construct(DateTime $now, DateTime $target, $runtime, Formatter $formatter, Imagick $background, Font $font, $default = null, CacheItemPoolInterface $cache = null, $cacheItemClass = null)
+    public function __construct(DateTime $now, DateTime $target, $runtime, Formatter $formatter, Imagick $background, Font $font, $default = null, CacheItemPoolInterface $cache = null)
     {
         $this->now = $now;
         $this->target = $target;
@@ -84,7 +78,6 @@ class CountdownGif
         $this->background = $background;
         $this->font = $font;
         $this->cache = $cache;
-        $this->cacheItemClass = $cacheItemClass;
         $this->generateIdentifier();
     }
 
@@ -129,7 +122,7 @@ class CountdownGif
         $posY = $posY + $dimensions['textHeight'] * 0.65 / 2;
         $frame->annotateImage($draw, $posX, $posY, 0, $text);
         $frame->setImageDelay(100);
-        $this->cacheFrame($frame);
+        $this->cacheFrame($frame, $seconds);
         return $frame;
     }
 
@@ -188,23 +181,20 @@ class CountdownGif
 
     protected function isCacheable()
     {
-        return (is_subclass_of($this->cache,  CacheItemPoolInterface::class) && is_subclass_of($this->cacheItemClass,  CacheItemInterface::class));
+        return (is_subclass_of($this->cache,  CacheItemPoolInterface::class));
     }
 
     /**
      * @param Imagick $frame
+     * @param int $seconds
      * @return bool
      */
-    protected function cacheFrame(Imagick $frame)
+    protected function cacheFrame(Imagick $frame, $seconds)
     {
         if(!$this->isCacheable()) {
             return false;
         }
-        if(!is_subclass_of($this->cacheItemClass,  CacheItemInterface::class)) {
-            return false;
-        }
-        $item = new $this->cacheItemClass();
-        $item->set($frame);
+        $item = new CacheItem($this->getPrefixedKey($seconds), true, $frame);
         $item->expiresAt($this->target);
         return $this->cache->save($item);
     }
