@@ -161,7 +161,10 @@ class CountdownGif
                 'format' => $this->formatter->getFormat(),
                 'pads' => $this->formatter->getPads(),
             ],
-            'background' => hash('md5', $this->background->getImageBlob()),
+            'background' => [
+                'width' => $this->background->getImageWidth(),
+                'height' => $this->background->getImageHeight(),
+            ],
             'font' => [
                 'family' => $this->font->getFamily(),
                 'size' => $this->font->getSize(),
@@ -169,7 +172,7 @@ class CountdownGif
             ],
         ];
         $json = json_encode($array);
-        $hash = hash('sha512', $json);
+        $hash = hash('sha256', $json);
 
         $this->identifier = $hash;
     }
