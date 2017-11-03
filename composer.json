@@ -1,6 +1,6 @@
 {
     "name": "astrotomic/countdown-gif",
-    "description": "Management system of internal notifications for Laravel 5.*",
+    "description": "Countdown-Gif generator",
     "keywords": ["gif", "countdown", "imagick"],
     "license": "MIT",
     "authors": [
