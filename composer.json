@@ -17,10 +17,10 @@
     },
     "suggest": {
         "cache/filesystem-adapter": "Allows to cache single frames in filesystem",
-        "ache/memcached-adapter": "Allows to cache single frames in memcached",
-        "ache/memcache-adapter": "Allows to cache single frames in memcache",
-        "ache/predis-adapter": "Allows to cache single frames in predis",
-        "ache/redis-adapter": "Allows to cache single frames in redis"
+        "cache/memcached-adapter": "Allows to cache single frames in memcached",
+        "cache/memcache-adapter": "Allows to cache single frames in memcache",
+        "cache/predis-adapter": "Allows to cache single frames in predis",
+        "cache/redis-adapter": "Allows to cache single frames in redis"
     },
     "autoload": {
         "psr-4": {
