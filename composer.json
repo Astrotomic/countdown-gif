@@ -1,0 +1,30 @@
+{
+    "name": "astrotomic/countdown-gif",
+    "description": "Management system of internal notifications for Laravel 5.*",
+    "keywords": ["gif", "countdown", "imagick"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Witkowski",
+            "email": "dev.gummibeer@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^5.6",
+        "ext-imagick": "*",
+        "psr/cache": "^1.0"
+    },
+    "suggest": {
+        "cache/filesystem-adapter": "Allows to cache single frames in filesystem",
+        "ache/memcached-adapter": "Allows to cache single frames in memcached",
+        "ache/memcache-adapter": "Allows to cache single frames in memcache",
+        "ache/predis-adapter": "Allows to cache single frames in predis",
+        "ache/redis-adapter": "Allows to cache single frames in redis"
+    },
+    "autoload": {
+        "psr-4": {
+            "Astrotomic\\CountdownGif\\": "src"
+        }
+    }
+}
