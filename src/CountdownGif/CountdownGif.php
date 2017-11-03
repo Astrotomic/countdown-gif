@@ -94,6 +94,7 @@ class CountdownGif
         $draw = $this->font->getImagickDraw();
         for ($i = 0; $i <= $this->getRuntime(); $i++) {
             $frame = $this->generateFrame($draw, $posX, $posY, $this->getDiff() - $i);
+            $frame->setImageDelay(100);
             $gif->addImage($frame);
         }
         return $gif;
@@ -111,7 +112,9 @@ class CountdownGif
         $seconds = max(0, $seconds);
         $key = $this->getPrefixedKey($seconds);
         if($this->isCacheable() && $this->cache->hasItem($key)) {
-            return $this->cache->getItem($key)->get();
+            $frame = new Imagick();
+            $frame->readImageBlob($this->cache->getItem($key)->get());
+            return $frame;
         }
         $text = $this->default;
         if (empty($text) || $seconds > 0) {
@@ -121,7 +124,6 @@ class CountdownGif
         $dimensions = $frame->queryFontMetrics($draw, $text);
         $posY = $posY + $dimensions['textHeight'] * 0.65 / 2;
         $frame->annotateImage($draw, $posX, $posY, 0, $text);
-        $frame->setImageDelay(100);
         $this->cacheFrame($frame, $seconds);
         return $frame;
     }
@@ -144,6 +146,8 @@ class CountdownGif
 
     protected function generateIdentifier()
     {
+        $colorBg = (clone $this->background);
+        $colorBg->resizeImage(1, 1, Imagick::FILTER_UNDEFINED, 1);
         $array = [
             'target' => [
                 'timestamp' => $this->target->getTimestamp(),
@@ -157,6 +161,7 @@ class CountdownGif
             'background' => [
                 'width' => $this->background->getImageWidth(),
                 'height' => $this->background->getImageHeight(),
+                'color' => $colorBg->getImagePixelColor(1, 1)->getColorAsString(),
             ],
             'font' => [
                 'family' => $this->font->getFamily(),
@@ -194,8 +199,10 @@ class CountdownGif
         if(!$this->isCacheable()) {
             return false;
         }
-        $item = new CacheItem($this->getPrefixedKey($seconds), true, $frame);
-        $item->expiresAt($this->target);
+        $item = new CacheItem($this->getPrefixedKey($seconds), true, $frame->getImageBlob());
+        $expires = clone $this->now;
+        $expires->modify('+ '.($seconds+1).' seconds');
+        $item->expiresAt($expires);
         return $this->cache->save($item);
     }
 }
