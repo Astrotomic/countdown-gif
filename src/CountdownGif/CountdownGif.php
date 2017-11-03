@@ -94,13 +94,13 @@ class CountdownGif
      * @param int $posX
      * @return Imagick
      */
-    public function generate($posY, $posX)
+    public function generate($posX, $posY)
     {
         $gif = new Imagick();
         $gif->setFormat('gif');
         $draw = $this->font->getImagickDraw();
         for ($i = 0; $i <= $this->getRuntime(); $i++) {
-            $frame = $this->generateFrame($draw, $posY, $posX, $this->getDiff() - $i);
+            $frame = $this->generateFrame($draw, $posX, $posY, $this->getDiff() - $i);
             $gif->addImage($frame);
         }
         return $gif;
@@ -113,7 +113,7 @@ class CountdownGif
      * @param int $seconds
      * @return Imagick
      */
-    protected function generateFrame($draw, $posY, $posX, $seconds)
+    protected function generateFrame($draw, $posX, $posY, $seconds)
     {
         $seconds = max(0, $seconds);
         $key = $this->getPrefixedKey($seconds);
