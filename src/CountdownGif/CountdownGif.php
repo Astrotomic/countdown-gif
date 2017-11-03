@@ -100,7 +100,7 @@ class CountdownGif
         $gif->setFormat('gif');
         $draw = $this->font->getImagickDraw();
         for ($i = 0; $i <= $this->getRuntime(); $i++) {
-            $frame = $this->getFrame($draw, $posY, $posX, $this->getDiff() - $i);
+            $frame = $this->generateFrame($draw, $posY, $posX, $this->getDiff() - $i);
             $gif->addImage($frame);
         }
         return $gif;
@@ -146,7 +146,7 @@ class CountdownGif
      */
     protected function getRuntime()
     {
-        return min($this->runtime, max(0, $this > $this->getDiff()));
+        return min($this->runtime, max(0, $this->getDiff()));
     }
 
     protected function generateIdentifier()
