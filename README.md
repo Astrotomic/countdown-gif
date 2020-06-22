@@ -1,5 +1,3 @@
-
-
 ## Example
 
 ```php
@@ -45,6 +43,7 @@ header('Pragma: no-cache');
 header('Content-Type: image/gif');
 echo $gif->getImagesBlob();
 ```
+
 ## Treeware
 
 You're free to use this package, but if it makes it to your production environment I would highly appreciate you buying the world a tree.
@@ -53,6 +52,4 @@ It’s now common knowledge that one of the best tools to tackle the climate cri
 
 You can buy trees at [offset.earth/treeware](https://plant.treeware.earth/Astrotomic/countdown-gif)
 
-Read more about Treeware at [treeware.earth](https://treeware.earth)### Security
-
-If you discover any security related issues, please check [SECURITY](https://github.com/Astrotomic/.github/blob/master/SECURITY.md) for steps to report it.
+Read more about Treeware at [treeware.earth](https://treeware.earth)
