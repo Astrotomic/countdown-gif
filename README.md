@@ -44,7 +44,8 @@ header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
 header('Content-Type: image/gif');
 echo $gif->getImagesBlob();
-``## Treeware
+```
+## Treeware
 
 You're free to use this package, but if it makes it to your production environment I would highly appreciate you buying the world a tree.
 
